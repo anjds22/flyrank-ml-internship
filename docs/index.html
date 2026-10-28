@@ -1,1 +1,75 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Search Visibility Opportunity Scoring</title>
+<style>
+body{margin:0;font:17px/1.7 Arial,sans-serif;background:#f4f6fb;color:#202938}
+header{background:#172554;color:white;padding:55px 8%}
+main{max-width:850px;margin:30px auto;padding:0 20px}
+section{background:white;padding:25px 30px;margin:20px 0;border-radius:12px}
+h1{font-size:40px;line-height:1.2}h2{color:#1d4ed8}
+a{color:#2563eb}.note{background:#eff6ff;padding:14px;border-radius:8px}
+</style>
+</head>
+<body>
+<header>
+<p>FLYRANK ML INTERNSHIP · RESEARCH</p>
+<h1>Finding Search Visibility Opportunities Through Content Scoring</h1>
+<p>A transparent baseline for prioritising content for review using search performance signals.</p>
+<p>Research lane: Refresh / Content Opportunity Scoring</p>
+</header>
+<main>
+<section>
+<h2>Abstract</h2>
+<p>This study investigates whether search performance signals can help prioritise content for review. A rule-based baseline uses Google Search Console impressions and average position from the FlyRank internship warehouse. Content receives a higher review priority when impressions are low and average position is poor. The baseline produces a ranked queue with a score, reason code and suggested review action. Comparative model performance and generalisation remain to be established through time-aware validation.</p>
+</section>
+<section>
+<h2>1. Introduction</h2>
+<p>Content teams have limited time and need a repeatable way to identify pages that may warrant investigation. This research evaluates a transparent scoring approach as a decision-support tool, not as proof that a page needs updating or that any change will cause ranking improvements.</p>
+</section>
+<section>
+<h2>2. Data</h2>
+<p>The initial baseline uses daily content performance records from the FlyRank internship warehouse for March 2026, including GSC impressions and average position, restricted to records with GSC data available. The analysis uses DuckDB to query the warehouse.</p>
+<p>Public reporting excludes client identities, domains, URLs, private queries, credentials and raw data exports. The exact dataset release and any additional exclusions must be documented when verified.</p>
+</section>
+<section>
+<h2>3. Methodology</h2>
+<p>The baseline assigns one point for fewer than 100 impressions and one point for an average position of 20 or worse. Higher scores are ranked first, with lower impressions and worse position used to break ties. Each candidate receives the reason code LOW_VISIBILITY and the action REVIEW.</p>
+<p>The baseline uses contemporaneous search signals rather than future performance labels. A final model must be evaluated against this baseline using the same eligible records and a clearly defined time-aware or grouped validation split.</p>
+</section>
+<section>
+<h2>4. Results</h2>
+<p>The baseline notebook generates a ranked action queue at work/outputs/baseline_action_score.csv. The highest-ranked rows have low impressions and poor average position by construction.</p>
+<div class="note"><strong>Validation status:</strong> Comparative model metrics, held-out results and charts have not yet been added. No claim of model improvement is made here.</div>
+</section>
+<section>
+<h2>5. Limitations</h2>
+<p>Low visibility does not establish why a page performs poorly. New, specialised or intentionally low-volume content may be incorrectly prioritised. Impressions and average position vary with query mix and other factors. This score is a review aid, not a causal estimate of refresh impact or evidence about Google's ranking algorithm.</p>
+</section>
+<section>
+<h2>6. Ranked Recommendations</h2>
+<ol>
+<li>Review content with low impressions and average position of 20 or worse.</li>
+<li>Inspect page purpose, content quality and available context before deciding on edits.</li>
+<li>Avoid unnecessary changes to stronger-performing content solely because of this score.</li>
+</ol>
+<p>These are preliminary rule-based recommendations and should be refined after validation and manual review of false positives.</p>
+</section>
+<section>
+<h2>7. Reproducibility</h2>
+<p><a href="https://github.com/anjds22/flyrank-ml-internship">View the source repository and notebooks</a></p>
+<p>Baseline notebook: work/notebooks/w04_baseline_score.ipynb</p>
+<p>Run the notebook with authorised dataset access to regenerate the ranked queue. Model training, validation results and final figures remain to be added.</p>
+</section>
+<section>
+<h2>8. Acknowledgments and Data Credit</h2>
+<p>Built on the <a href="https://flyrank.ai/">FlyRank ML Internship dataset</a>.</p>
+</section>
+</main>
+<footer style="text-align:center;padding:25px;color:#64748b">Research prototype · Decision support, not causal proof</footer>
+</body>
+</html>
+
