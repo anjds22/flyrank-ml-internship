@@ -1,1 +1,131 @@
+Finding Search Visibility Opportunities Through Content Scoring
 
+1. Abstract
+
+This research investigates how search performance data can be used to identify content that may require further review. A rule-based scoring system was developed using Google Search Console impressions and average search position. A Decision Tree classifier was then trained to predict whether content would receive fewer than 100 impressions in the following month. On a sampled time-based test set, the Decision Tree achieved an F1 score of 84.7%, compared with 77.5% for the rule-based baseline. These findings suggest that machine learning can support content prioritisation, although further validation is required before applying the approach more broadly.
+
+2. Introduction
+
+Content teams often manage large numbers of web pages and need efficient ways to identify which pages may require attention. Reviewing every page manually can be time-consuming, making data-driven prioritisation useful.
+
+This project explores whether search performance indicators, particularly impressions, clicks and average search position, can help identify content with potential visibility issues.
+
+The research focuses on two questions:
+
+- Can a simple scoring system identify content that may need review?
+- Can a machine learning model improve the prediction of low search impressions in the following month?
+
+The objective is to develop a practical decision-support approach rather than claim that the model can directly improve search rankings.
+
+3. Data
+
+The project used FlyRank's `fact_content_daily_performance` dataset, accessed through Hugging Face and queried using DuckDB.
+
+The analysis used Google Search Console performance fields:
+
+- gsc_impressions
+- gsc_clicks
+- gsc_avg_position
+- gsc_data_available
+
+The baseline analysis focused on March 2026. The modelling experiment used monthly aggregated data covering January 2025 to June 2026.
+
+Records without available Google Search Console data were excluded from the relevant analysis. Content and client identifiers were hashed, and no client names, domains or private URLs were included in the published results.
+
+4. Methodology
+
+The project used two approaches.
+
+4.1 Rule-based baseline
+
+A simple scoring system assigned points based on two conditions:
+
+- One point if impressions were below 100.
+- One point if average search position was 20 or worse.
+
+Content receiving higher scores was prioritised for further review. Reason codes were also generated to explain why individual items were flagged.
+
+4.2 Machine learning model
+
+A Decision Tree classifier was developed to predict whether content would receive fewer than 100 impressions in the following month.
+
+The model used three input features:
+
+- Current-month impressions.
+- Current-month clicks.
+- Current-month average position.
+
+The target variable was whether next-month impressions were below 100.
+
+The Decision Tree used a maximum depth of 4, a minimum leaf size of 100 and balanced class weights.
+
+The experiment used a time-aware split. A sample of 150,000 records was used for training, covering periods up to April 2026. A separate sample of 30,000 May 2026 records was used for testing against June 2026 outcomes.
+
+The rule-based baseline and Decision Tree were evaluated on the same test sample.
+
+5. Results
+
+The following results were obtained:
+
+| Metric    | Rule-based baseline | Decision Tree |
+| --------- | ------------------- | ------------- |
+| Accuracy  | 75.1%               | 86.1%         |
+| Precision | 68.8%               | 90.6%         |
+| Recall    | 88.9%               | 79.5%         |
+| F1-score  | 77.5%               | 84.7%         |
+
+The Decision Tree achieved higher accuracy, precision and F1-score than the rule-based baseline.
+
+Its precision of 90.6% indicates that a larger proportion of its positive predictions were correct. However, its recall was lower than the baseline, meaning it missed more instances of content that subsequently received fewer than 100 impressions.
+
+Main finding: The Decision Tree improved the overall F1-score from 77.5% to 84.7% in the sampled time-based evaluation. This suggests that the model may provide a more useful prioritisation signal than the simple baseline, although additional testing is needed.
+
+6. Limitations
+
+Several limitations should be considered.
+
+First, low impressions do not necessarily indicate poor content quality. Search demand, seasonality, competition and other external factors can influence performance.
+
+Second, average search position and impressions are indicators of search performance, not direct measurements of content quality.
+
+Third, the model was evaluated on a sampled dataset and a specific time-based test period. Its performance may differ across other periods or datasets.
+
+Finally, predictive performance does not demonstrate that updating content will improve search rankings or traffic. The model should therefore be treated as a decision-support tool rather than an automated content optimisation system.
+
+7. Ranked Recommendations
+
+The project produced a ranked action queue containing 176,738 content items, using March 2026 performance data.
+
+The recommendations are:
+
+1. Prioritise low-visibility content: Review pages receiving fewer than 100 impressions.
+2. Investigate weak search positioning: Examine pages with an average position of 20 or worse.
+3. Review overlapping signals: Give additional attention to pages meeting both conditions.
+4. Use human review: Check search intent, relevance, completeness and seasonality before making changes.
+5. Monitor performance: Track changes in impressions, clicks and average position over subsequent periods.
+
+The ranked queue is intended to guide investigation, not automatically trigger content changes.
+
+8. Reproducibility
+
+The notebooks and supporting analysis are available in the public GitHub repository:
+
+- Research question and task framing: `w01_research_question.ipynb` and `w02_ml_task_framing.ipynb`
+- Data preparation and leakage checks: `w03_data_contract.ipynb` and `w03_feature_leakage_check.ipynb`
+- Baseline and signal analysis: `w04_baseline_score.ipynb` and `w04_signal_audit.ipynb`
+- Model development: `w05_model.ipynb`
+- Validation: `w06_validation_audit.ipynb`
+- Recommendations: `w07_action_playbook.ipynb`
+- Complete capstone: `capstone.ipynb`
+
+Repository: [https://github.com/anjds22/flyrank-ml-internship](https://github.com/anjds22/flyrank-ml-internship?utm_source=chatgpt.com)
+
+Supporting aggregate outputs, including the monitoring snapshot and reason-code summary, are also included in the repository.
+
+9. Acknowledgements
+
+This project was completed as part of the FlyRank ML internship. The research used the provided FlyRank search performance data and learning resources.
+
+Data credit: [FlyRank](https://flyrank.ai?utm_source=chatgpt.com).
+
+THAT'S YOUR PAPER. You can paste this into your paper and format the headings. One important detail: make sure the notebook links point to the actual files in your repository before publishing.
